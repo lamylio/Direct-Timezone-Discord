@@ -15,5 +15,7 @@ module.exports = {
         
         console.log(api_url);
         /* TODO fetch */
+
+        return;
     },
 }

@@ -1,5 +1,6 @@
-const {prefix, keys} = require('./utils.js')
+const {prefix, keys, server, refresh} = require('./utils.js')
 const commands = require('./commands/exports')
+const {getServerRoles, getAllLocations} = require('./db/firestore');
 
 /* --- */
 const Discord = require('discord.js');
@@ -13,9 +14,27 @@ bot.login(keys.TOKEN);
 
 /* --- */
 
-bot.once('ready', () => {
+bot.once('ready', async () => {
   console.info(`Logged in as ${bot.user.tag}!`);
+  ROLES_TO_UPDATE = Array.from(await getServerRoles());
 });
+
+bot.setInterval(() => {
+  if (!ROLES_TO_UPDATE || ROLES_TO_UPDATE.length < 1) return;
+
+  ROLES_TO_UPDATE.forEach(role => {
+    localstamp = Date.now() + ALL_LOCATIONS.getrole.offset*1000;
+    localtime = new Date(localstamp).toLocaleTimeString("en-GB", {timeZone: "UTC", hour: '2-digit', minute:'2-digit', timeStyle: 'short'});
+    
+    bot.guilds.get(server).roles.get(role.id).edit({
+      name: `${role.name} (${localtime})`
+    }).catch(console.error);
+  });
+
+}, refresh*1000)
+
+
+/* --- */
 
 bot.on("message", msg => {
   
@@ -30,7 +49,8 @@ bot.on("message", msg => {
   console.info(`Called command '${cmd}' with args '${JSON.stringify(args)}'`);
 
   try {
-    command.execute(msg, args);
+    callback = command.execute(msg, args);
+    if (callback) callback();
   } catch (error) {
     if (error instanceof SyntaxError) {
       msg.reply(error.message + "\nUsage: " + prefix + command.name + " " + command.usage);
@@ -38,7 +58,6 @@ bot.on("message", msg => {
       console.error(error)
     }
   }
-
 })
 
 

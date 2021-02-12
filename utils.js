@@ -1,6 +1,13 @@
 require('dotenv').config()
 module.exports = {
     prefix: "!",
+    server: '140938526723276800',
+    refresh: 30,
+    collections: {
+        guilds: "server",
+        locations: "location",
+        roles: "group",
+    },
     keys: {
         TOKEN: process.env.TOKEN,
         GEOKEY: process.env.GEOKEY,
