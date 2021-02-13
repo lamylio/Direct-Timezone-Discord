@@ -1,8 +1,9 @@
 require('dotenv').config()
 module.exports = {
     prefix: "!",
-    server: '140938526723276800',
-    refresh: 30,
+    refresh: 10,
+    color: "#d990e7",
+    hoist: true,
     collections: {
         guilds: "server",
         locations: "location",
@@ -13,5 +14,10 @@ module.exports = {
         GEOKEY: process.env.GEOKEY,
     },
     geocoding_api: `https://api.opencagedata.com/geocode/v1/json?q=%q&key=%k&language=fr&pretty=1`,
+    getFormattedTimeZone(offset){
+        localstamp = Date.now() + offset*1000;
+        localtime = new Date(localstamp).toLocaleTimeString("en-GB", {timeZone: "UTC", timeStyle: 'short'});
+        return localtime;
+    }
 }
 
