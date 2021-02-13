@@ -3,10 +3,9 @@ module.exports = {
     settings: {
         prefix: "!",
         debug: true,
-        refresh: 60,
+        refresh: 50,
         activity: "the time go by.. ⏳",
         new_role:{
-            getName(x){return x.annotations.timezone.name},
             color: "#d990e7",
             hoist: true,
         }
