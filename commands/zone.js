@@ -26,7 +26,7 @@ module.exports = {
             const json = await (await fetch(api_url)).json();
             if (settings.debug) console.log("Queries left:", json.rate.remaining);
 
-            const location = json.results[0].annotations.timezone.name;
+            const location = settings.new_role.getName(json.results[0]);
             const offset = json.results[0].annotations.timezone.offset_sec;
             let flag = json.results[0].annotations.flag;
             if (flag == undefined) flag = "❓";
