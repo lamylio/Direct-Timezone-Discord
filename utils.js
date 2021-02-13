@@ -1,9 +1,15 @@
 require('dotenv').config()
 module.exports = {
-    prefix: "!",
-    refresh: 10,
-    color: "#d990e7",
-    hoist: true,
+    settings: {
+        prefix: "!",
+        debug: true,
+        refresh: 60,
+        activity: "the time go by.. ⏳",
+        new_role:{
+            color: "#d990e7",
+            hoist: true,
+        }
+    },
     collections: {
         guilds: "server",
         locations: "location",
