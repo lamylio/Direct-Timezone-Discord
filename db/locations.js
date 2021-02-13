@@ -13,6 +13,7 @@ module.exports.getLocation = async function(location){
 module.exports.addLocation = async function(location, data){
     location = location.replace('/', '\\');
     await db.collection(collections.locations).doc(location).update({
+        name: data.name,
         flag: data.flag,
         offset: data.offset,
         queries: firestore.FieldValue.arrayUnion(data.query.toLowerCase())
