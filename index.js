@@ -83,11 +83,17 @@ bot.on("message", msg => {
   try {
     command.execute(msg, args).catch(error => {
       if (error instanceof SyntaxError) {
-        msg.reply(error.message + "\nUsage: " + settings.prefix + command.name + " " + command.usage);
+        let error_message = `**${error.message}** \n`;
+        if (command.usage) error_message+= `**Usage**: ${settings.prefix}${command.name} ${command.usage}\n`;
+        if (command.aliases) error_message+= `**Aliases** : ${JSON.stringify(command.aliases)}`;
+
+        msg.reply(error_message).then(rep => {
+          rep.delete({ timeout: 20000 });
+        });
       }else{
         console.log(error);
       }
-    });
+    }).finally(msg.delete({ timeout: 6000 }));
   } catch (error) {
     console.log(error);
   }
@@ -103,7 +109,10 @@ bot.on('roleCreate', async role => {
   
   if (role.client.user.id == bot.user.id && role.hexColor == settings.new_role.color && role.hoist == settings.new_role.hoist){
     if (settings.debug) console.log("New role intercepted: ", role.name);
-    ALL_SERVERS = Array.from(await getServers());
+    setTimeout(async () => {
+      ALL_SERVERS = Array.from(await getServers());
+      if (settings.debug) console.log("NEW ALL_Servers : ", ALL_SERVERS.length);
+    }, 5000)
   } 
 
 });
@@ -123,17 +132,19 @@ function startTicking(){
     */
     if (settings.maintenance) return;
     if (settings.debug) console.log("Interval for editing roles ticking..");
+    if (settings.debug) console.log("ALL_Servers : ", ALL_SERVERS.length);
+
     ALL_SERVERS.forEach(doc => {
   
       server = doc.data();
       server.id = doc.id;
-      
+      if (settings.debug) console.log("Server : ", server.id);
       /* 
       If the server is not defined as active or we're not connected in anymore
       Then we remove it from the list, and ensure that its set as inactive 
       */
-      if (!server.active) return;
-      if (server.active && !bot.guilds.cache.some(ids => ids == server.id)){
+
+      if (!server.active || !bot.guilds.cache.some(ids => ids == server.id)){
         setActive(server.id, false);
         ALL_SERVERS = ALL_SERVERS.filter(serv=> serv.id != server.id);
         return;

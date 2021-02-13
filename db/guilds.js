@@ -6,8 +6,9 @@ module.exports.getServers = async function(){
     if (!snap.empty){
         return snap.docs;
     }
+    return [];
 }
 
 module.exports.setActive = async function(server, active){
-    await db.collection(collections.guilds).doc(server).update({active: active}, {merge: true});
+    await db.collection(collections.guilds).doc(server).update({active: active}, {merge: true}).catch();
 }

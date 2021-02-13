@@ -3,7 +3,7 @@ const {firestore} = require("firebase-admin")
 const {collections} = require('../utils');
 
 module.exports.getLocation = async function(location){
-    const snap = await db.collection(collections.locations).where("queries", "array-contains", location.toLowerCase()).get();
+    const snap = await db.collection(collections.locations).where("queries", "array-contains", location.toLowerCase()).get().catch();
     if (!snap.empty){
         loc = snap.docs.shift();
         return [loc.id, loc.data()]
@@ -17,5 +17,5 @@ module.exports.addLocation = async function(location, data){
         flag: data.flag,
         offset: data.offset,
         queries: firestore.FieldValue.arrayUnion(data.query.toLowerCase())
-    }, {merge: true});
+    }, {merge: true}).catch();
 }

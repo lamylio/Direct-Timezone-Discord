@@ -48,7 +48,7 @@ module.exports = {
                 color: settings.new_role.color, 
                 hoist: settings.new_role.hoist
             }, reason: "Role-Location doesn't exists yet."});
-            addRole(msg.guild.id, {id: server_role.id, name: server_role.name, offset: stored_data.offset});
+            await addRole(msg.guild.id, {id: server_role.id, name: server_role.name, offset: stored_data.offset});
         }
 
         /* Add the corresponding server-role to the user */
