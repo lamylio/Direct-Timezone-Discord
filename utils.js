@@ -6,7 +6,7 @@ module.exports = {
         refresh: 60,
         activity: "the time go by.. ⏳",
         new_role:{
-            getName(x){return x.annotations.timezone.short_name},
+            getName(x){return x.annotations.timezone.name},
             color: "#d990e7",
             hoist: true,
         }
