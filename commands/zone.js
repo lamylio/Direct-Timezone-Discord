@@ -9,7 +9,6 @@ module.exports = {
     aliases: ["timezone", "setzone"],
     usage : `<location>`,
     async execute(msg, args){
-
         if (!args || args.length < 1) throw SyntaxError("wrong command : please specify a location!");
         
         const query = args.join(' ');        
@@ -57,7 +56,7 @@ module.exports = {
         })
 
         /* Send a nice message */
-        msg.reply(`you are now known as living near **${stored_location}**, being in the time zone **${stored_data.name}** ! By the way, it should be **${getFormattedTimeZone(stored_data.offset)}** at your place!`).then(resp => {
+        msg.reply(`you are now known as living near **${stored_location}**, being in the time zone **${stored_data.name}** ! By the way, it should be **${getFormattedTimeZone(stored_data.offset)}** at your place!\nI'll refresh your time every ${settings.refresh/60} minutes.`).then(resp => {
             resp.react(stored_data.flag)
         });
         

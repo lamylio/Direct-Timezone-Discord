@@ -132,7 +132,7 @@ function startTicking(){
     */
     if (settings.maintenance) return;
     if (settings.debug) console.log("Interval for editing roles ticking..");
-    if (settings.debug) console.log("ALL_Servers : ", ALL_SERVERS.length);
+    if (settings.debug) console.log("All Servers : ", ALL_SERVERS.length);
 
     ALL_SERVERS.forEach(doc => {
   
