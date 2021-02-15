@@ -3,6 +3,7 @@
 Imports 
 ====================
 */
+const package = require('./package.json');
 const {settings, keys, colors, getFormattedTimeZone, roundTime} = require('./utils/utils.js')
 const {getServers, setActive} = require('./db/guilds');
 const {removeRole} = require('./db/roles.js');
@@ -36,6 +37,9 @@ bot.once('ready', async () => {
 
   ALL_SERVERS = Array.from(await getServers())
   TICKING_LOOP = startTicking();
+  
+  let bot_v = `Timezone v${package.version}`
+  if (bot.user.username != bot_v) bot.user.setUsername(bot_v);
 });
 
 bot.on("debug", (msg) => {
