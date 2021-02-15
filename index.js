@@ -77,7 +77,7 @@ bot.on("message", msg => {
   const command = bot.commands.get(cmd) || bot.commands.find(command => command.aliases && command.aliases.includes(cmd))
   if (!command) return;
 
-  if (settings.debug) console.info(`User ${msg.author.name} called command '${cmd}' with args '${JSON.stringify(args)}'`);
+  if (settings.debug) console.info(`User ${msg.author.username} called command '${cmd}' with args '${JSON.stringify(args)}'`);
   try {
     command.execute(msg, args).catch(error => {
       if (error instanceof SyntaxError) {
@@ -86,12 +86,12 @@ bot.on("message", msg => {
         if (command.aliases) error_message+= `**Aliases** : ${JSON.stringify(command.aliases)}`;
 
         msg.reply(error_message).then(rep => {
-          rep.delete({ timeout: 20000 });
+          rep.delete({ timeout: 30000 });
         });
       }else{
         console.log(error);
       }
-    }).finally(msg.delete({ timeout: 6000 }));
+    }).finally(msg.delete({ timeout: 10000 }));
   } catch (error) {
     console.log(error);
   }
@@ -159,7 +159,7 @@ function startTicking(){
         return;
       }
       
-      addRequests(server.roles.length); // Keep track of the nb of requests
+      addRequests(server.id, server.roles.length); // Keep track of the nb of requests
       server.roles.forEach(role => {
         
         /* If the role doesn't exist anymore, we remove it from the database and the list */

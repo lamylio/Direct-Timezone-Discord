@@ -36,7 +36,7 @@ module.exports = {
         localstamp = Date.now() + offset*1000;
         localtime = module.exports.roundTime(localstamp, round);
 
-        return localtime.toLocaleTimeString("en-GB", {timeZone: "UTC", timeStyle: 'short'});
+        return localtime.toLocaleTimeString({timeZone: "UTC", timeStyle: 'short'});
     },
 }
 

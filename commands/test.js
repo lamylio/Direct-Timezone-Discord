@@ -6,7 +6,7 @@ module.exports = {
     usage : ``,
     async execute(msg, args){
         
-        addRequests(args[0]);
+        addRequests(msg.guild.id, parseInt(args[0]));
     
     }
 }

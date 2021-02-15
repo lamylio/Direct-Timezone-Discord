@@ -2,7 +2,7 @@ const db = require('./firestore');
 const {collections} = require('../utils/utils');
 
 module.exports.getServers = async function(){
-    const snap = await db.collection(collections.guilds).get();
+    const snap = await db.collection(collections.guilds).where("active", "!=", "false").get();
     if (!snap.empty){
         return snap.docs;
     }
