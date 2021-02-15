@@ -1,5 +1,5 @@
 const db = require('./firestore');
-const {collections} = require('../utils');
+const {collections} = require('../utils/utils');
 
 module.exports.getServers = async function(){
     const snap = await db.collection(collections.guilds).get();

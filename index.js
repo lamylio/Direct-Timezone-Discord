@@ -3,9 +3,10 @@
 Imports 
 ====================
 */
-const {settings, keys, getFormattedTimeZone} = require('./utils.js')
+const {settings, keys, colors, getFormattedTimeZone, roundTime} = require('./utils/utils.js')
 const {getServers, setActive} = require('./db/guilds');
 const {removeRole} = require('./db/roles.js');
+const {addRequests} = require('./db/requests.js');
 
 const commands = require('./commands/exports')
 
@@ -30,12 +31,7 @@ let ALL_SERVERS = Array.from([])
 let TICKING_LOOP;
 
 bot.once('ready', async () => {
-  console.info(`
-====================
-Logged in as ${bot.user.tag}! and debug is set to ${settings.debug}
-====================
-  `);
-
+  console.info(colors.yellow(`====================\nLogged in as ${bot.user.tag}! and debug is set to ${settings.debug}\n====================`), colors.reset());
   bot.user.setPresence({ activity: { name: settings.activity, type: "WATCHING" }, status: 'available' });
 
   ALL_SERVERS = Array.from(await getServers())
@@ -45,18 +41,14 @@ Logged in as ${bot.user.tag}! and debug is set to ${settings.debug}
 bot.on("debug", (msg) => {
   /* If we hit the discord api limit, we shut down the bot as its not working */
   if (msg.startsWith("429 hit")){
-    console.error(`
-====================
-!! Rate-limited !!
-====================
-    `);
-    //process.exit(429);
+    console.error(colors.redBright(`====================\n!! Rate-limited !!\nNext try in 6 hours\n====================`),colors.reset());
+
     bot.user.setPresence({ activity: { name: "sorry, I'm API-limited !" }, status: 'dnd' });
     bot.clearInterval(TICKING_LOOP);
 
     setTimeout(() => {
       bot.user.setPresence({ activity: { name: "fetching the API 🔌"}, status: 'idle' });
-      console.log("Trying to re-launch the bot..");
+      console.log(colors.redBright("Trying to re-launch the bot.."), colors.reset());
       TICKING_LOOP = startTicking();
     }, 3600*6*1000); // 6 hours
 
@@ -79,7 +71,7 @@ bot.on("message", msg => {
   const command = bot.commands.get(cmd) || bot.commands.find(command => command.aliases && command.aliases.includes(cmd))
   if (!command) return;
 
-  if (settings.debug) console.info(`Called command '${cmd}' with args '${JSON.stringify(args)}'`);
+  if (settings.debug) console.info(`User ${msg.author.name} called command '${cmd}' with args '${JSON.stringify(args)}'`);
   try {
     command.execute(msg, args).catch(error => {
       if (error instanceof SyntaxError) {
@@ -111,7 +103,6 @@ bot.on('roleCreate', async role => {
     if (settings.debug) console.log("New role intercepted: ", role.name);
     setTimeout(async () => {
       ALL_SERVERS = Array.from(await getServers());
-      if (settings.debug) console.log("NEW ALL_Servers : ", ALL_SERVERS.length);
     }, 5000)
   } 
 
@@ -124,21 +115,32 @@ function startTicking(){
     bot.user.setPresence({ activity: { name: settings.activity, type: "WATCHING" }, status: 'available' });
   }, settings.refresh*1000);
 
+  /* 
+  ==================== 
+  Retrieve all the roles on each server and modify the name with the current time
+  ====================
+  */
   return bot.setInterval(() => {
+    
     /* 
-    ==================== 
-    Retrieve all the roles on each server and modify the name with the current time
-    ====================
+    First, we need to check if its time to update
     */
-    if (settings.maintenance) return;
-    if (settings.debug) console.log("Interval for editing roles ticking..");
-    if (settings.debug) console.log("All Servers : ", ALL_SERVERS.length);
+
+    let current = Date.now();
+    let expected = roundTime(current, Math.round(settings.refresh/60));
+    let diff = Math.abs(current-expected);
+
+    if (diff > 500) return;
+    if (settings.debug) console.log(colors.yellow(`Ticking at ${getFormattedTimeZone(0, 1)} with ${ALL_SERVERS.length} active servers.`), colors.reset());
+
+    /* 
+    Then, we can start the loop and modify the roles
+    */
 
     ALL_SERVERS.forEach(doc => {
   
       server = doc.data();
       server.id = doc.id;
-      if (settings.debug) console.log("Server : ", server.id);
       /* 
       If the server is not defined as active or we're not connected in anymore
       Then we remove it from the list, and ensure that its set as inactive 
@@ -147,9 +149,11 @@ function startTicking(){
       if (!server.active || !bot.guilds.cache.some(ids => ids == server.id)){
         setActive(server.id, false);
         ALL_SERVERS = ALL_SERVERS.filter(serv=> serv.id != server.id);
+        if (settings.debug) console.log(colors.yellow(`Server ${server.id} is now considered inactive.`) ,colors.reset());
         return;
       }
-  
+      
+      addRequests(server.roles.length); // Keep track of the nb of requests
       server.roles.forEach(role => {
         
         /* If the role doesn't exist anymore, we remove it from the database and the list */
@@ -171,6 +175,5 @@ function startTicking(){
       });
   
     });
-  
-  }, settings.refresh*1000)
+  }, 1000)
 }

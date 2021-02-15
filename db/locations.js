@@ -1,6 +1,6 @@
 const db = require('./firestore');
 const {firestore} = require("firebase-admin")
-const {collections} = require('../utils');
+const {collections} = require('../utils/utils');
 
 module.exports.getLocation = async function(location){
     const snap = await db.collection(collections.locations).where("queries", "array-contains", location.toLowerCase()).get().catch();

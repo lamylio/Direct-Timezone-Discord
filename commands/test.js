@@ -1,9 +1,12 @@
+const {roundTime, getFormattedTimeZone} = require('../utils/utils');
+const {addRequests} = require('../db/requests');
+
 module.exports = {
     name: "test",
     usage : ``,
     async execute(msg, args){
-        const reaction = await msg.react("🎉");
-        console.log(reaction.users.cache);
+        
+        addRequests(args[0]);
     
     }
 }

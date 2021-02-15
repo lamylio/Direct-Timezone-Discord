@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const {geocoding_api, keys, settings, getFormattedTimeZone} = require('../utils')
+const {geocoding_api, keys, settings, colors, getFormattedTimeZone} = require('../utils/utils')
 const {getLocation, addLocation} = require("../db/locations")
 const {addRole} = require("../db/roles")
 
@@ -18,12 +18,12 @@ module.exports = {
 
         /* Check if location was found is the database */
         if (known_location === undefined){
-            if (settings.debug) console.log("Location not found in database.. Fetching..");
+            if (settings.debug) console.log(colors.magenta(`Location ${query} not found in database.. Fetching..`),colors.reset());
 
             /* If not, we ask the geocoding_api */
             const api_url = encodeURI(geocoding_api.replace("%k", keys.GEOKEY).replace("%q", query));
             const json = await (await fetch(api_url)).json();
-            if (settings.debug) console.log("Queries left:", json.rate.remaining);
+            if (settings.debug) console.log(colors.magenta("Queries left:", json.rate.remaining),colors.reset());
 
             const location = json.results[0].annotations.timezone.name;
             const name = json.results[0].annotations.timezone.short_name;
@@ -41,7 +41,7 @@ module.exports = {
         /* Check for server role (name used instead of location id)*/
         server_role = msg.guild.roles.cache.find(role => role.name.toLowerCase().startsWith(stored_data.name.toLowerCase()))
          if (!server_role){
-            if (settings.debug) console.log("Server role doesn't exist yet.. creating.");
+            if (settings.debug) console.log(colors.magenta((`Server role doesn't exist yet on ${msg.guild.id}.. creating.`)),colors.reset());
             server_role = await msg.guild.roles.create({data: {
                 name: stored_data.name, 
                 color: settings.new_role.color, 
