@@ -39,7 +39,9 @@ bot.once('ready', async () => {
   TICKING_LOOP = startTicking();
   
   let bot_v = `Timezone v${package.version}`
-  if (bot.user.username != bot_v) bot.user.setUsername(bot_v);
+  if (bot.user.username != bot_v) {
+    bot.user.setUsername(bot_v).then(console.log(colors.yellow(`Username changed to ${bot_v}`), colors.reset()));
+  }
 });
 
 bot.on("debug", (msg) => {
@@ -56,7 +58,7 @@ bot.on("debug", (msg) => {
       TICKING_LOOP = startTicking();
     }, 3600*6*1000); // 6 hours
 
-  }else {if (settings.debug) console.log(msg);}
+  }else {if (settings.debug) if(!msg.toLowerCase().includes("heartbeat")) console.log(msg);}
 }).on("warn", () => {if (settings.debug) console.log});
 
 /* 
