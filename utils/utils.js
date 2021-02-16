@@ -34,7 +34,7 @@ module.exports = {
     
         return localtime;
     },
-    getFormattedTimeZone(offset, round=15, withdate=false, timezone="UTC"){
+    getFormattedTimeZone(offset, round=15, withdate=false, timezone="UTC", lang="fr-FR"){
         localstamp = Date.now()
         cleanzone = timezone.replace('\\', '/');
 

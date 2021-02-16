@@ -14,7 +14,7 @@ module.exports = {
 
             let fields = ""
             roles.forEach(role => {
-                fields += `<@&${role.id}>, more precisely ${getFormattedTimeZone(0, 1, true, role.zone)}\n`;
+                fields += `<@&${role.id}>, more precisely ${getFormattedTimeZone(0, 1, true, role.zone, "en-IN")}\n`;
             });
             
             let embbed = new Discord.MessageEmbed()
