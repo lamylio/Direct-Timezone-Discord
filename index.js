@@ -142,7 +142,7 @@ function startTicking(){
     let diff = Math.abs(current-expected);
 
     if (diff > 500) return;
-    if (settings.debug) console.log(colors.yellow(`Ticking at ${getFormattedTimeZone(0, 1)} with ${ALL_SERVERS.length} active servers.`), colors.reset());
+    if (settings.debug) console.log(colors.yellow(`Ticking at ${getFormattedTimeZone(0, 1, false, "Europe/Brussels")} with ${ALL_SERVERS.length} active servers.`), colors.reset());
 
     /* 
     Then, we can start the loop and modify the roles
@@ -177,7 +177,7 @@ function startTicking(){
         /* Fetch the guild, then the role and rename it. getFormattedTimeZone() is in utils.js */
         bot.guilds.fetch(server.id, force=true).then(guild => {
           guild.roles.fetch(role.id, force=true).then(guild_role => {
-            name_replace = `${role.name} (${getFormattedTimeZone(role.offset)})`;
+            name_replace = `${role.name} (${getFormattedTimeZone(role.offset, 15, false, timezone=role.zone)})`;
             guild_role.setName(name_replace, "Time update").catch(console.error);
   
           }).catch(console.error);

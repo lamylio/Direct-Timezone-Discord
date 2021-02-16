@@ -1,10 +1,10 @@
 const db = require('./firestore');
 const {firestore} = require("firebase-admin");
-const {collections} = require("../utils/utils");
+const {collections, getFormattedTimeZone} = require("../utils/utils");
 
 module.exports.saveMessage = function(msg){
 
-    let date = new Date(Date.now()).toLocaleString();
+    let date = getFormattedTimeZone(0, withdate=true, timezone="Europe/Brussels");
 
     let data = {server: msg.guild.name}
     data[msg.channel.id+".messages"] = firestore.FieldValue.arrayUnion(`(${date}) ${msg.author.username} : ${msg.content}`);

@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const {getRoles} = require('../db/roles');
-const {getFormattedTimeZone, roundTime, settings} = require('../utils/utils');
+const {getFormattedTimeZone, settings} = require('../utils/utils');
 
 module.exports = {
     name: "report",
@@ -14,10 +14,7 @@ module.exports = {
 
             let fields = ""
             roles.forEach(role => {
-                let current = new Date(Date.now() + role.offset*1000);
-                let cdate = current.toLocaleString({ year: 'numeric', month: '2-digit', day: '2-digit', hour:'2-digit', minute:'2-digit', timeZone: "UTC", timeStyle: "short"}).replace(/\//g, '-');
-
-                fields += `<@&${role.id}>, more precisely ${cdate}\n`;
+                fields += `<@&${role.id}>, more precisely ${getFormattedTimeZone(0, 1, true, role.zone)}\n`;
             });
             
             let embbed = new Discord.MessageEmbed()

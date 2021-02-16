@@ -6,7 +6,7 @@ module.exports = {
     usage : ``,
     async execute(msg, args){
         
-        addRequests(msg.guild.id, parseInt(args[0]));
+        getFormattedTimeZone(0, 1, true, timezone=args[0]);
     
     }
 }

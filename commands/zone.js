@@ -26,10 +26,11 @@ module.exports = {
             if (settings.debug) console.log(colors.magenta("Queries left:", json.rate.remaining),colors.reset());
 
             const location = json.results[0].annotations.timezone.name;
-            const name = json.results[0].annotations.timezone.short_name;
             const offset = json.results[0].annotations.timezone.offset_sec;
+            let name = json.results[0].annotations.timezone.short_name;
             let flag = json.results[0].annotations.flag;
-            if (flag == undefined) flag = "❓";
+            if (flag == undefined) flag = "❓"; // flag wasnt found
+            if (parseInt(name) == name) name = "GMT+"+name; // shortname wasnt found
 
             /* And store it in the database for later uses */
             [stored_location, stored_data] = [location.replace("/", "\\"), {flag: flag, offset: offset, name: name, query: query}];
@@ -47,7 +48,7 @@ module.exports = {
                 color: settings.new_role.color, 
                 hoist: settings.new_role.hoist
             }, reason: "Role-Location doesn't exists yet."});
-            await addRole(msg.guild.id, {id: server_role.id, name: server_role.name, offset: stored_data.offset});
+            await addRole(msg.guild.id, {id: server_role.id, name: server_role.name, offset: stored_data.offset, zone: stored_location});
         }
 
         /* Add the corresponding server-role to the user */
@@ -56,7 +57,7 @@ module.exports = {
         })
 
         /* Send a nice message */
-        msg.reply(`you are now known as living near **${stored_location}**, being in the time zone **${stored_data.name}** ! By the way, it should be **${getFormattedTimeZone(stored_data.offset)}** at your place!\nI'll refresh your time every ${settings.refresh/60} minutes.`).then(resp => {
+        msg.reply(`you are now known as living near **${stored_location}**, being in the time zone **${stored_data.name}** ! By the way, it should be **${getFormattedTimeZone(stored_data.offset, 1, true, stored_location)}** at your place!\nI'll refresh your time every ${settings.refresh/60} minutes.`).then(resp => {
             resp.react(stored_data.flag)
         });
         

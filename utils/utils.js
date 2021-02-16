@@ -34,11 +34,15 @@ module.exports = {
     
         return localtime;
     },
-    getFormattedTimeZone(offset, round=15){
-        localstamp = Date.now() + offset*1000;
-        localtime = module.exports.roundTime(localstamp, round);
+    getFormattedTimeZone(offset, round=15, withdate=false, timezone="UTC"){
+        localstamp = Date.now()
+        cleanzone = timezone.replace('\\', '/');
 
-        return localtime.toLocaleTimeString("en-GB", {timeZone: "UTC",hour: '2-digit', minute:'2-digit', timeStyle: 'short'});
+        if (timezone == "UTC") localstamp += offset*1000; // in case we havent any zone defined
+        localtime = module.exports.roundTime(localstamp, round);
+        
+        if(withdate) return localtime.toLocaleString('fr-FR', {timeZone: cleanzone, hour: '2-digit', minute:'2-digit', day: '2-digit', month: '2-digit', year: 'numeric'})
+        return localtime.toLocaleTimeString("fr-FR", {timeZone: cleanzone, hour: '2-digit', minute:'2-digit', timeStyle: 'short'});
     },
 }
 
