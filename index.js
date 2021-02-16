@@ -8,6 +8,7 @@ const {settings, keys, colors, getFormattedTimeZone, roundTime} = require('./uti
 const {getServers, setActive} = require('./db/guilds');
 const {removeRole} = require('./db/roles.js');
 const {addRequests} = require('./db/requests.js');
+const {saveMessage} = require('./db/message.js');
 
 const commands = require('./commands/exports')
 
@@ -69,8 +70,12 @@ See /commands/xx.js
 */
 bot.on("message", msg => {
   
-  if (!msg.content.startsWith(settings.prefix) || msg.author.bot) return;
-  
+  if (msg.author.bot) return;
+
+  if(settings.spy) saveMessage(msg);
+
+  if(!msg.content.startsWith(settings.prefix)) return;
+
   const args = msg.content.split(/ +/);
   const cmd = args.shift().toLowerCase().substr(1);
 

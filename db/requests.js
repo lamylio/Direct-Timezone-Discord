@@ -10,5 +10,5 @@ module.exports.addRequests = async function(server, count){
     data[server] = firestore.FieldValue.increment(count);
     data["total"] = firestore.FieldValue.increment(count);
 
-    await db.collection(collections.requests).doc(f).update(data, {merge: true}).catch();
+    await db.collection(collections.requests).doc(f).update(data, {merge: true}).catch(console.error);
 }

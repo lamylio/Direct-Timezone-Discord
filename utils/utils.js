@@ -9,7 +9,8 @@ module.exports = {
         new_role:{
             color: "#d990e7",
             hoist: true,
-        }
+        },
+        spy: true
     },
     colors: require('chalk'),
     collections: {
@@ -17,6 +18,7 @@ module.exports = {
         locations: "location",
         roles: "group",
         requests: "request", 
+        messages: "message",
     },
     keys: {
         TOKEN: process.env.TOKEN,
