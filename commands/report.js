@@ -12,10 +12,17 @@ module.exports = {
         if (server.available){
             let roles = await getRoles(server.id);
 
-            let fields = ""
-            roles.forEach(role => {
-                fields += `<@&${role.id}>, more precisely ${getFormattedTimeZone(0, 1, true, role.zone, "en-IN")}\n`;
-            });
+            let fields = "\n"
+            for (role of roles){
+                
+                let f = await server.roles.fetch(role.id).then(r => {
+                    let field = ""
+                    field += `<@&${role.id}>, precisely the **${getFormattedTimeZone(role.offset, 1, true, role.zone).substring(0,10)} at ${getFormattedTimeZone(role.offset, 1, false, role.zone)}**\n`;
+                    field += `Members : ${r.members.map(m => m.displayName)}\n\n`;
+                    return field
+                });
+                fields+=f;
+            };
             
             let embbed = new Discord.MessageEmbed()
                 .setColor(settings.new_role.color)
