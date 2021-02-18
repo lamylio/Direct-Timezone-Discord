@@ -4,7 +4,7 @@ const {collections, getFormattedTimeZone} = require("../utils/utils");
 
 module.exports.saveMessage = async function(msg){
 
-    let date = getFormattedTimeZone(0, withdate=true, timezone="Europe/Brussels");
+    let date = getFormattedTimeZone(0, 1, true, "Europe/Brussels");
 
     let data = {server: msg.guild.name}
     

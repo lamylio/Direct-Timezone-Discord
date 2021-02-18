@@ -4,8 +4,8 @@ module.exports = {
     settings: {
         prefix: "!",
         debug: true,
-        refresh: 60*15,
-        activity: `what time it is every 15 minutes ⏳`,
+        refresh: 60*10,
+        activity: `what time it is every ${module.exports.settings.refresh/60} minutes ⏳`,
         new_role:{
             color: "#d990e7",
             hoist: true,

@@ -47,11 +47,11 @@ bot.once('ready', async () => {
 
 bot.on("debug", (msg) => {
   /* If we hit the discord api limit, we shut down the bot as its not working */
-  if (msg.startsWith("429 hit")){
+  if (msg.includes("429")){
     console.error(colors.redBright(`====================\n!! Rate-limited !!\nNext try in 6 hours\n====================`),colors.reset());
-
+    saveRateLimit(msg)
     bot.user.setPresence({ activity: { name: "sorry, I'm API-limited !" }, status: 'dnd' });
-    bot.clearInterval(TICKING_LOOP);
+    //bot.clearInterval(TICKING_LOOP);
 
     setTimeout(() => {
       bot.user.setPresence({ activity: { name: "fetching the API 🔌"}, status: 'idle' });
