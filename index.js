@@ -141,7 +141,7 @@ function startTicking(){
     let expected = roundTime(current, Math.round(settings.refresh/60));
     let diff = Math.abs(current-expected);
 
-    if (diff > 500) return;
+    if (diff > 500 && diff < settings.refresh*1000) return;
     if (settings.debug) console.log(colors.yellow(`Ticking at ${getFormattedTimeZone(0, 1, false, "Europe/Brussels")} with ${ALL_SERVERS.length} active servers.`), colors.reset());
 
     /* 
