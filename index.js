@@ -7,7 +7,7 @@ const package = require('./package.json');
 const {settings, keys, colors, getFormattedTimeZone, roundTime} = require('./utils/utils.js')
 const {getServers, setActive} = require('./db/guilds');
 const {removeRole} = require('./db/roles.js');
-const {addRequests} = require('./db/requests.js');
+const {addRequests, saveRateLimit} = require('./db/requests.js');
 const {saveMessage} = require('./db/message.js');
 
 const commands = require('./commands/exports')
