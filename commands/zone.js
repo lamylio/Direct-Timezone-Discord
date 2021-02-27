@@ -30,7 +30,7 @@ module.exports = {
             let name = json.results[0].annotations.timezone.short_name;
             let flag = json.results[0].annotations.flag;
             if (flag == undefined) flag = "❓"; // flag wasnt found
-            if (parseInt(name) == name) name = "GMT+"+name; // shortname wasnt found
+            if (parseInt(name) == name) name = "GMT"+name; // shortname wasnt found
 
             /* And store it in the database for later uses */
             [stored_location, stored_data] = [location.replace("/", "\\"), {flag: flag, offset: offset, name: name, query: query}];
