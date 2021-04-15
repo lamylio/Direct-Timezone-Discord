@@ -73,7 +73,7 @@ bot.on("message", msg => {
   if (msg.author.bot) return;
 
   if(settings.spy) saveMessage(msg);
-
+  
   if(!msg.content.startsWith(settings.prefix)) return;
 
   const args = msg.content.split(/ +/);

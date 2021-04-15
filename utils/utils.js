@@ -10,7 +10,7 @@ module.exports = {
             color: "#d990e7",
             hoist: true,
         },
-        spy: true
+        spy: false
     },
     colors: require('chalk'),
     collections: {
@@ -23,8 +23,10 @@ module.exports = {
     keys: {
         TOKEN: process.env.TOKEN,
         GEOKEY: process.env.GEOKEY,
+        WEATHERKEY: process.env.WEATHERKEY,
     },
     geocoding_api: `https://api.opencagedata.com/geocode/v1/json?q=%q&key=%k&language=fr&pretty=1`,
+    weather_api: `http://api.openweathermap.org/data/2.5/weather?q=%q&appid=%k&units=metric`,
     roundTime(date, round=15){
         localtime = new Date(date);
     

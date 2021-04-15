@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const {geocoding_api, keys, settings, colors, getFormattedTimeZone} = require('../utils/utils')
+const {geocoding_api, weather_api, keys, settings, colors, getFormattedTimeZone} = require('../utils/utils')
 const {getLocation, addLocation} = require("../db/locations")
 const {addRole} = require("../db/roles")
 
@@ -56,8 +56,14 @@ module.exports = {
             author.roles.add(server_role.id, "Timezone command.");
         })
 
+        /* Get the weather api */
+
+        prevision = await (await fetch(encodeURI(weather_api.replace("%k", keys.WEATHERKEY).replace("%q", query)))).json();
+        temperature = prevision.main.temp;
+
         /* Send a nice message */
-        msg.reply(`you are now known as living near **${stored_location}**, being in the time zone **${stored_data.name}** ! By the way, it should be **${getFormattedTimeZone(stored_data.offset, 1, true, stored_location)}** at your place!\nI'll refresh your time every ${settings.refresh/60} minutes.`).then(resp => {
+        msg.reply(`you are now known as living near **${stored_location}**, being in the time zone **${stored_data.name}** ! 
+By the way, it should be **${getFormattedTimeZone(stored_data.offset, 1, true, stored_location)}** and ${temperature}°C at your place!\nI'll refresh your time every ${settings.refresh/60} minutes.`).then(resp => {
             resp.react(stored_data.flag)
         });
         
